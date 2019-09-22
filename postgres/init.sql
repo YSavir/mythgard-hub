@@ -164,7 +164,8 @@ $$ language sql stable;
 ALTER TABLE mythgard.account ENABLE ROW LEVEL SECURITY;
 
 -- Admin users can make any changes and read all rows
-CREATE POLICY admin_all ON mythgard.account TO admin USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON mythgard.account TO admin, express USING (true) WITH CHECK (true);
+GRANT admin TO express;
 -- Non-admins can read all rows
 CREATE POLICY all_view ON mythgard.account FOR SELECT USING (true);
 -- Rows can only be updated by their author
@@ -361,17 +362,24 @@ CREATE USER postgraphile WITH password 'bears4life';
 GRANT ALL PRIVILEGES ON SCHEMA mythgard TO postgraphile;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA mythgard TO postgraphile;
 
+CREATE USER express WITH password 'express1yay';
+GRANT ALL PRIVILEGES ON SCHEMA mythgard TO express;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA mythgard TO express;
+
 -- The Postgraphile user needs privileges to set role for itself
 GRANT authd_user TO postgraphile;
 GRANT anon_user TO postgraphile;
 
 GRANT ALL PRIVILEGES ON SCHEMA mythgard TO admin;
+GRANT ALL PRIVILEGES ON SCHEMA mythgard TO express;
 GRANT ALL PRIVILEGES ON SCHEMA mythgard TO authd_user;
 GRANT ALL PRIVILEGES ON SCHEMA mythgard TO anon_user;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA mythgard TO admin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA mythgard TO express;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA mythgard TO authd_user;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA mythgard TO anon_user;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA mythgard TO admin;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA mythgard TO express;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA mythgard TO authd_user;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA mythgard TO anon_user;
 
